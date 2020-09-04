@@ -1,0 +1,50 @@
+div.search_container {
+  position: absolute;
+  top: 0;
+  z-index: 3;
+  height: 100vh;
+  width: 100vw;
+  background: #323140;
+
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: column;
+}
+div.search_container form {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  margin-top: 30px;
+  /* background: green;  */
+}
+@media (min-width: 500px) {
+  div.search_container form {
+    width: 50%;
+  }
+}
+div.search_container input,
+div.search_container button {
+  border: 0;
+  outline: none;
+  height: 2.4em;
+}
+div.search_container input {
+  width: 70%;
+  border-radius: 10px 0 0 10px;
+  padding: 0 10px;
+}
+div.search_container form button {
+  border-radius: 0 10px 10px 0;
+  padding: 0 10px;
+  background: rgb(93, 101, 175);
+}
+div.search_container #close {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 1%;
+}
