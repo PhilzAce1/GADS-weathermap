@@ -20,6 +20,11 @@ body {
   ); /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to top, #8e44ad, #c0392b);
   background: #323140;
+  background: red;
+  background-size: cover;
+  background-blend-mode: multiply;
+  background-repeat: no-repeat;
+  background: url('../images/thunder.PNG'), rgba(0, 0, 0, 0.37);
 
   height: 100vh;
   width: 100vw;

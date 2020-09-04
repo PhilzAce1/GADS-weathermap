@@ -3,7 +3,7 @@ const openModalButton = document.querySelector('#toggle');
 const closeModalButton = document.querySelector('#close');
 
 //Event Listeners
-searchForm.addEventListener('submit', handleSearch);
+searchForm.addEventListener('submit', submit);
 openModalButton.addEventListener('click', handleOpenModal);
 closeModalButton.addEventListener('click', handleCloseModal);
 
@@ -67,10 +67,10 @@ const modal = (function () {
 })();
 function submit(e) {
   e.preventDefault();
-  handleSearch();
+  handleSearch(e.target.search.value);
 }
 async function handleSearch(location) {
-  const searchParam = location || e.target.search.value || 'new york';
+  const searchParam = location || 'new york';
   const apiId = 'bc1301b0b23fe6ef52032a7e5bb70820';
   const url = `http://api.openweathermap.org/data/2.5/forecast/daily/?q=${searchParam}&appid=${apiId}`;
   try {
