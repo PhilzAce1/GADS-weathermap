@@ -2,12 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Hello World</title>
+    <title>Clear Sky</title>
+    <script
+      src="https://kit.fontawesome.com/ff0ee12b4e.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
-    <!-- <link
+    <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap"
       rel="stylesheet"
-    /> -->
+    />
+
     <link rel="manifest" href="/manifest.json" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
@@ -163,7 +169,19 @@
       </symbol>
     </svg>
     <div class="search_container">
-      <button id="close">Close</button>
+      <div class="snowflakes" aria-hidden="true">
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+        <div class="snowflake">❄</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+        <div class="snowflake">❄</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+        <div class="snowflake">❄</div>
+      </div>
+      <button id="close">❌</button>
       <h2>Seacrch for you Favourite Location</h2>
       <form id="search_form">
         <input type="search" name="search" id="search" />
@@ -172,7 +190,7 @@
     </div>
 
     <header>
-      <button id="toggle">Open</button>
+      <button id="toggle">🔍</button>
       <nav></nav>
     </header>
     <main class="container">
@@ -200,7 +218,7 @@
           <h4 class="day">Today</h4>
           <h4 class="date">20th January</h4>
         </div>
-        <div class="desktop">
+        <div class="desktop weather_content">
           <div class="location_container">
             <h2 class="location">Tokyo</h2>
             <p>

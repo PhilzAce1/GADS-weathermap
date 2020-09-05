@@ -14,6 +14,11 @@ closeModalButton.addEventListener('click', handleCloseModal);
 //   }
 // };
 
+function image(cond) {
+  const imageSelected = imageSwitcher(cond);
+  console.log(imageSelected);
+  document.documentElement.style.setProperty('--bgi', imageSelected.img);
+}
 const animate = (function () {
   return {
     fadeIn(el) {
@@ -72,12 +77,12 @@ function submit(e) {
 async function handleSearch(location) {
   const searchParam = location || 'new york';
   const apiId = 'bc1301b0b23fe6ef52032a7e5bb70820';
-  const url = `http://api.openweathermap.org/data/2.5/forecast/daily/?q=${searchParam}&appid=${apiId}`;
+  const url = `http://api.openweathermap.org/data/2.5/forecast/daily/?q=${searchParam}&appid=${apiId}&units=metric`;
   try {
     let res = await fetch(url);
     res = await res.json();
-    console.log(res);
-    // modal.close('.search_container');
+    mainForcast(res, forcast);
+    modal.close('.search_container');
   } catch (e) {
     console.log(e);
   }
@@ -88,9 +93,7 @@ function handleCloseModal() {
 function handleOpenModal() {
   modal.open('.search_container');
 }
-function makeApiCall() {}
-function handleBackground() {}
-function updateDom() {}
+
 function weatherIcon(cond) {
   const weatherIconObj = {
     sunny: `<figure>
@@ -280,20 +283,109 @@ function weatherIcon(cond) {
   }
   return res;
 }
-function forcast() {
+function imageSwitcher(cond) {
+  let res;
+  switch (cond) {
+    case 'Clouds':
+      res = {
+        img: "url('../images/cloud.jpg')",
+      };
+      break;
+    case 'Clear':
+      res = {
+        img: "url('../images/clear.jpg')",
+      };
+      break;
+    case 'Sun':
+      res = {
+        img: "url('../images/sunny.PNG')",
+      };
+      break;
+    case 'Rain':
+    case 'Drizzle':
+      res = {
+        img: "url('../images/rain.jpg')",
+      };
+      break;
+    case 'Mist':
+    case 'Fog':
+      res = {
+        img: "url('../images/fog.jpg')",
+      };
+      break;
+    case 'Thunderstorm':
+      res = {
+        img: "url('../images/thunder.PNG')",
+      };
+      break;
+    case 'Snow':
+      res = {
+        img: "url('../images/snow.jpg')",
+      };
+      break;
+    default:
+      res = {
+        img: "url('../images/sunny.PNG')",
+      };
+      break;
+  }
+  return res;
+}
+
+function forcast(data) {
   const dailyData = [];
-  return {
-    setForCast(listData) {
-      if (!Array.isArray(listData) || listData < 2) return;
-      listData.forEach((list) => {
-        const obj = {};
-        obj.name = list.name;
-        dailyData.push(obj);
-      });
-    },
-    displayForcast() {
-      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-      console.log(dailyData);
-    },
-  };
+  function setForCast(listData) {
+    if (!Array.isArray(listData) || listData < 2) return;
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    listData.forEach((list) => {
+      const obj = {};
+      let maxTemp = Math.round(list.temp.max);
+      let minTemp = Math.round(list.temp.min);
+      let avg = (maxTemp + minTemp) / 2;
+      let dayIndex = new Date(list.dt * 1000).getDay();
+      obj.temp = avg;
+      obj.day = days[dayIndex];
+      obj.weather = list.weather[0].main;
+      dailyData.push(obj);
+    });
+  }
+  function displayForcast() {
+    const weatherCards = document.querySelectorAll('.card');
+    setForCast(data);
+    const cardData = dailyData.slice(1, 5);
+    weatherCards.forEach((card, index) => {
+      const dayWeather = cardData[index];
+      let weatherIconRes = weatherIcon(dayWeather.weather);
+      card.querySelector('h5').textContent = dayWeather.day;
+      card.querySelector('.icon_div').innerHTML = weatherIconRes;
+      card.querySelector('.mobile_temp').textContent = dayWeather.temp;
+    });
+    return dailyData;
+  }
+  return displayForcast();
+}
+function mainForcast(data, cb) {
+  const weatherConds = document.querySelectorAll('.weather_content');
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const obj = {};
+  let maxTemp = Math.round(data.list[0].temp.max);
+  let minTemp = Math.round(data.list[0].temp.min);
+  let avg = (maxTemp + minTemp) / 2;
+  let fullDate = new Date(data.list[0].dt * 1000);
+  let dayIndex = fullDate.getDay();
+  obj.cityName = data.city.name;
+  obj.temp = avg;
+  obj.day = days[dayIndex];
+  obj.date = fullDate.toDateString().split(' ').slice(1, 3).join(' ');
+  obj.weather = data.list[0].weather[0].main;
+  image(obj.weather);
+  weatherConds.forEach((list) => {
+    list.querySelector('.location').textContent = obj.cityName;
+    list.querySelector('.temp').textContent = obj.temp;
+    list.querySelector('.day').textContent = obj.day;
+    list.querySelector('.date').textContent = obj.date;
+    list.querySelector('.icon_div').innerHTML = weatherIcon(obj.weather);
+  });
+  console.log(obj);
+  return cb(data.list);
 }
