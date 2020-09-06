@@ -1,5 +1,14 @@
 const CACHE_NAME = 'SITE_CONTENT_V1';
-var filesToCache = ['/', '/index.html', '/css/style.css', '/js/main.js'];
+var filesToCache = [
+  '/',
+  '/index.html',
+  '/css/style.css',
+  '/css/searchcontainer.css',
+  '/css/weatherIcons.css',
+  '/js/main.js',
+  '/offline.html',
+  '/404.html',
+];
 
 self.addEventListener('install', (installer) => {
   console.log('Installing');

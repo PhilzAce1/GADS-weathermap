@@ -8,13 +8,10 @@ openModalButton.addEventListener('click', handleOpenModal);
 closeModalButton.addEventListener('click', handleCloseModal);
 window.addEventListener('offline', handleOffline);
 window.addEventListener('online', handleOnline);
-
 window.onload = async () => {
   'use strict';
   getUserCoord();
-
   if ('serviceWorker' in navigator) {
-    console.log('I am supposed to be registering the servic worker');
     try {
       const registration = await navigator.serviceWorker.register('sw.js');
       console.log('Service worker registration sucessful');
@@ -25,9 +22,9 @@ window.onload = async () => {
       console.log(e);
     }
   }
-  // if ('serviceWorker' in navigator) {
-  // navigator.serviceWorker.register('./sw.js');
-  // }
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
+  }
 };
 const db = cacher();
 function getUserCoord() {
@@ -85,6 +82,7 @@ function image(cond) {
   const imageSelected = imageSwitcher(cond);
   document.documentElement.style.setProperty('--bgi', imageSelected.img);
 }
+// basic animations
 const animate = (function () {
   return {
     fadeIn(el) {
@@ -122,6 +120,7 @@ const animate = (function () {
     },
   };
 })();
+// modal controller
 const modal = (function () {
   return {
     open(el) {
@@ -136,6 +135,7 @@ const modal = (function () {
     },
   };
 })();
+
 function submit(e) {
   e.preventDefault();
   handleSearch(e.target.search.value);
@@ -144,29 +144,31 @@ async function handleSearch(location, method, data) {
   const searchParam = location || 'new york';
   const apiId = 'bc1301b0b23fe6ef52032a7e5bb70820';
   let search, loc;
+  // search could be based on coordinates or name
   if (method === 'latlng') {
     const { lat, lng } = data;
-
     search = `lat=${lat}&lon=${lng}`;
     loc = `${lat} ${lng}`;
   } else {
     search = `q=${searchParam}`;
     loc = `${location}`;
   }
+  // check for checked cached version before making request
   const cachedData = db.get({
     location: loc,
   });
+  // if cached request exist return cache, else make request
   if (cachedData.success) {
     mainForcast(cachedData.res.message, forcast);
     return modal.close('.search_container');
   }
-
   const url = `https://api.openweathermap.org/data/2.5/forecast/daily/?${search}&appid=${apiId}&units=metric`;
   try {
     let res = await fetch(url);
     res = await res.json();
     if (res.cod === '200') {
       mainForcast(res, forcast);
+      // cache data
       db.post({
         location: loc,
         data: res,
@@ -473,6 +475,7 @@ function mainForcast(data, cb) {
   obj.day = days[dayIndex];
   obj.date = fullDate.toDateString().split(' ').slice(1, 3).join(' ');
   obj.weather = data.list[0].weather[0].main;
+  obj.weatherDesc = data.list[0].weather[0].description;
   image(obj.weather);
   weatherConds.forEach((list) => {
     list.querySelector('.location').textContent = obj.cityName;
@@ -480,6 +483,7 @@ function mainForcast(data, cb) {
     list.querySelector('.day').textContent = obj.day;
     list.querySelector('.date').textContent = obj.date;
     list.querySelector('.icon_div').innerHTML = weatherIcon(obj.weather);
+    list.querySelector('.weather_condition_text').textContent = obj.weatherDesc;
   });
   return cb(data.list);
 }
