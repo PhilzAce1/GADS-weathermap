@@ -9,12 +9,25 @@ closeModalButton.addEventListener('click', handleCloseModal);
 window.addEventListener('offline', handleOffline);
 window.addEventListener('online', handleOnline);
 
-window.onload = () => {
+window.onload = async () => {
   'use strict';
+  getUserCoord();
+
+  if ('serviceWorker' in navigator) {
+    console.log('I am supposed to be registering the servic worker');
+    try {
+      const registration = await navigator.serviceWorker.register('sw.js');
+      console.log('Service worker registration sucessful');
+      console.log(`Registered with scope: ${registration.scope}`);
+    } catch (e) {
+      debugger;
+      console.log('Service worker registration failed');
+      console.log(e);
+    }
+  }
   // if ('serviceWorker' in navigator) {
   // navigator.serviceWorker.register('./sw.js');
   // }
-  getUserCoord();
 };
 const db = cacher();
 function getUserCoord() {
@@ -45,22 +58,24 @@ function getUserCoord() {
 
     switch (e.code) {
       case 0: // unknown error
-        errorEl =
+        errorEl.textContent =
           'The application has encountered an unknown error while trying to determine location.';
 
         break;
 
       case 1: // permission denied
-        errorEl =
+        errorEl.textContent =
           'You chose not to allow this application access to your location.';
         break;
 
       case 2: // position unavailable
-        errorEl = 'The application was unable to determine your location.';
+        errorEl.textContent =
+          'The application was unable to determine your location.';
         break;
 
       case 3: // timeout
-        errorEl = 'The request to determine your location has timed out.';
+        errorEl.textContent =
+          'The request to determine your location has timed out.';
         break;
     }
   }

@@ -6,7 +6,7 @@ self.addEventListener('install', (installer) => {
 
   const done = async () => {
     const cache = await caches.open(CACHE_NAME);
-    return cache.addAll(urlsToCache);
+    return cache.addAll(filesToCache);
   };
 
   installer.waitUntil(done());
