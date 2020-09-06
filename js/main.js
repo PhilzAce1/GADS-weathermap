@@ -6,17 +6,68 @@ const closeModalButton = document.querySelector('#close');
 searchForm.addEventListener('submit', submit);
 openModalButton.addEventListener('click', handleOpenModal);
 closeModalButton.addEventListener('click', handleCloseModal);
+window.addEventListener('offline', handleOffline);
+window.addEventListener('online', handleOnline);
 
-// window.onload = () => {
-//   'use strict';
-//   if ('serviceWorker' in navigator) {
-//     navigator.serviceWorker.register('./sw.js');
-//   }
-// };
+window.onload = () => {
+  'use strict';
+  // if ('serviceWorker' in navigator) {
+  // navigator.serviceWorker.register('./sw.js');
+  // }
+  getUserCoord();
+};
+const db = cacher();
+function getUserCoord() {
+  const clonePosition = (position) => {
+    return {
+      coords: {
+        accuracy: position.coords.accuracy,
+        altitude: position.coords.altitude,
+        altitudeAccuracy: position.coords.altitudeAccuracy,
+        heading: position.coords.heading,
+        latitude: position.coords.latitude.toFixed(3),
+        longitude: position.coords.longitude.toFixed(3),
+        speed: position.coords.speed,
+      },
+      timestamp: position.timestamp,
+    };
+  };
+  function getPosition(position) {
+    // The way the position object is implemented
+    const {
+      coords: { latitude: lat, longitude: lng },
+    } = clonePosition(position);
+    handleSearch(null, 'latlng', { lng, lat });
+  }
+  function handleGeoError(e) {
+    const errorEl = document.querySelector('p.error');
+    console.error(e);
 
+    switch (e.code) {
+      case 0: // unknown error
+        errorEl =
+          'The application has encountered an unknown error while trying to determine location.';
+
+        break;
+
+      case 1: // permission denied
+        errorEl =
+          'You chose not to allow this application access to your location.';
+        break;
+
+      case 2: // position unavailable
+        errorEl = 'The application was unable to determine your location.';
+        break;
+
+      case 3: // timeout
+        errorEl = 'The request to determine your location has timed out.';
+        break;
+    }
+  }
+  navigator.geolocation.getCurrentPosition(getPosition, handleGeoError);
+}
 function image(cond) {
   const imageSelected = imageSwitcher(cond);
-  console.log(imageSelected);
   document.documentElement.style.setProperty('--bgi', imageSelected.img);
 }
 const animate = (function () {
@@ -74,17 +125,43 @@ function submit(e) {
   e.preventDefault();
   handleSearch(e.target.search.value);
 }
-async function handleSearch(location) {
+async function handleSearch(location, method, data) {
   const searchParam = location || 'new york';
   const apiId = 'bc1301b0b23fe6ef52032a7e5bb70820';
-  const url = `http://api.openweathermap.org/data/2.5/forecast/daily/?q=${searchParam}&appid=${apiId}&units=metric`;
+  let search, loc;
+  if (method === 'latlng') {
+    const { lat, lng } = data;
+
+    search = `lat=${lat}&lon=${lng}`;
+    loc = `${lat} ${lng}`;
+  } else {
+    search = `q=${searchParam}`;
+    loc = `${location}`;
+  }
+  const cachedData = db.get({
+    location: loc,
+  });
+  if (cachedData.success) {
+    mainForcast(cachedData.res.message, forcast);
+    return modal.close('.search_container');
+  }
+
+  const url = `https://api.openweathermap.org/data/2.5/forecast/daily/?${search}&appid=${apiId}&units=metric`;
   try {
     let res = await fetch(url);
     res = await res.json();
-    mainForcast(res, forcast);
-    modal.close('.search_container');
+    if (res.cod === '200') {
+      mainForcast(res, forcast);
+      db.post({
+        location: loc,
+        data: res,
+      });
+      modal.close('.search_container');
+    } else {
+      handleError(res);
+    }
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 function handleCloseModal() {
@@ -346,6 +423,7 @@ function forcast(data) {
       obj.temp = avg;
       obj.day = days[dayIndex];
       obj.weather = list.weather[0].main;
+      obj.weatherDesc = list.weather[0].description;
       dailyData.push(obj);
     });
   }
@@ -359,6 +437,8 @@ function forcast(data) {
       card.querySelector('h5').textContent = dayWeather.day;
       card.querySelector('.icon_div').innerHTML = weatherIconRes;
       card.querySelector('.mobile_temp').textContent = dayWeather.temp;
+      card.querySelector('p.weather_condition').textContent =
+        dayWeather.weatherDesc;
     });
     return dailyData;
   }
@@ -386,6 +466,58 @@ function mainForcast(data, cb) {
     list.querySelector('.date').textContent = obj.date;
     list.querySelector('.icon_div').innerHTML = weatherIcon(obj.weather);
   });
-  console.log(obj);
   return cb(data.list);
+}
+
+function handleError(e) {
+  console.error(e);
+  if (e.cod === '404') {
+    document.querySelector('p.error').textContent = e.message;
+  }
+}
+function cacher() {
+  function get(data) {
+    const result = {
+      success: false,
+      res: { status: 404, message: 'not Found' },
+    };
+    const date = new Date(Date.now())
+      .toDateString()
+      .split(' ')
+      .slice(1, 3)
+      .join(' ');
+    const cachedData = localStorage.getItem(date);
+    if (!cachedData) {
+      return result;
+    }
+    const cachedDataObj = JSON.parse(cachedData);
+    if (cachedDataObj.location === data.location) {
+      result.success = true;
+      result.res = {
+        status: 200,
+        message: cachedDataObj.res,
+      };
+    }
+    return result;
+  }
+  function post(res) {
+    const date = new Date(Date.now())
+      .toDateString()
+      .split(' ')
+      .slice(1, 3)
+      .join(' ');
+    const obj = {
+      location: res.location,
+      res: res.data,
+    };
+    localStorage[date] = JSON.stringify(obj);
+  }
+  function getLast() {}
+  return { get, post };
+}
+function handleOffline() {
+  document.querySelector('.online_checker').textContent = 'you are offline';
+}
+function handleOnline() {
+  document.querySelector('.online_checker').textContent = '';
 }
