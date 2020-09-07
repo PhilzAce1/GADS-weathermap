@@ -495,16 +495,15 @@ function handleError(e) {
   }
 }
 function cacher() {
+  function getTodayDate() {
+    return new Date(Date.now()).toDateString().split(' ').slice(1, 3).join(' ');
+  }
   function get(data) {
     const result = {
       success: false,
       res: { status: 404, message: 'not Found' },
     };
-    const date = new Date(Date.now())
-      .toDateString()
-      .split(' ')
-      .slice(1, 3)
-      .join(' ');
+    const date = getTodayDate();
     const cachedData = localStorage.getItem(date);
     if (!cachedData) {
       return result;
@@ -520,11 +519,7 @@ function cacher() {
     return result;
   }
   function post(res) {
-    const date = new Date(Date.now())
-      .toDateString()
-      .split(' ')
-      .slice(1, 3)
-      .join(' ');
+    const date = getTodayDate();
     const obj = {
       location: res.location,
       res: res.data,

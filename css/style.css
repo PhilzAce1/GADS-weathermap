@@ -1,7 +1,7 @@
 @import './weatherIcons.css';
 @import './searchcontainer.css';
 :root {
-  --bgi: url('../images/thunder.PNG');
+  --bgi: url('../images/cloud.jpg');
   --color: white;
 }
 html,
@@ -235,4 +235,11 @@ body {
   border: none;
   color: white;
   font-size: 2em;
+}
+
+@media (max-width: 500px) {
+  #toggle,
+  #close {
+    font-size: 1.4em;
+  }
 }
