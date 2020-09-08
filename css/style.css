@@ -51,7 +51,7 @@ body {
   /* backgroin: red; */
   padding-bottom: 20px;
 }
-.card h5 {
+.card .dayow {
   font-size: 1em;
   font-weight: 100;
 }
@@ -205,7 +205,7 @@ figcaption {
     height: 65%;
     min-width: 15%;
   }
-  .card > h5 {
+  .card > .dayow {
     font-size: 1.2em;
   }
   .card > div {
@@ -242,4 +242,9 @@ body {
   #close {
     font-size: 1.4em;
   }
+}
+label {
+  /* display: none; */
+  position: absolute;
+  opacity: 0;
 }

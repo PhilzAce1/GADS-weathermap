@@ -451,7 +451,7 @@ function forcast(data) {
     weatherCards.forEach((card, index) => {
       const dayWeather = cardData[index];
       let weatherIconRes = weatherIcon(dayWeather.weather);
-      card.querySelector('h5').textContent = dayWeather.day;
+      card.querySelector('.dayow').textContent = dayWeather.day;
       card.querySelector('.icon_div').innerHTML = weatherIconRes;
       card.querySelector('.mobile_temp').textContent = dayWeather.temp;
       card.querySelector('p.weather_condition').textContent =

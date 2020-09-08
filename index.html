@@ -15,7 +15,7 @@
     />
 
     <link rel="manifest" href="/manifest.json" />
-    <link rel="stylesheet" href="css/style.css" />
+    <!-- <link rel="stylesheet" href="css/style.css" /> -->
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <link rel="apple-touch-icon" href="images/hello-icon-152.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -25,6 +25,12 @@
     <meta name="apple-mobile-web-app-title" content="Clear Sky" />
     <meta name="msapplication-TileImage" content="images/hello-icon-144.png" />
     <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <meta
+      name="Description"
+      content="Author: Akuagwu Philemon,
+    Illustrator: Akuagwu Philemon, Category: Weather app ,
+    Length: 2 pages"
+    />
   </head>
   <body>
     <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
@@ -170,6 +176,8 @@
     </svg>
     <div class="search_container">
       <button id="close">❌</button>
+      <label for="search">Please your location of choice</label>
+
       <div class="snowflakes" aria-hidden="true">
         <div class="snowflake">❅</div>
         <div class="snowflake">❅</div>
@@ -182,7 +190,7 @@
         <div class="snowflake">❆</div>
         <div class="snowflake">❄</div>
       </div>
-      <h2>Seacrch for you Favourite Location</h2>
+      <h2>Search for you Favourite Location</h2>
       <p class="error"></p>
       <form id="search_form">
         <input
@@ -231,10 +239,10 @@
               <figcaption>Patchy Snow Night</figcaption>
             </figure>
           </div>
-          <h4 class="location">Tokyo</h4>
+          <p class="location">Tokyo</p>
           <div class="temp">25</div>
-          <h4 class="day">Today</h4>
-          <h4 class="date">20th January</h4>
+          <p class="day">Today</p>
+          <p class="date">20th January</p>
         </div>
         <div class="desktop weather_content">
           <div class="location_container">
@@ -246,8 +254,8 @@
           </div>
           <div class="weather">
             <div>
-              <h4 class="temp">11</h4>
-              <h4 class="weather_condition_text">Rainy</h4>
+              <p class="temp">11</p>
+              <p class="weather_condition_text">Rainy</p>
             </div>
             <div class="icon_div">
               <figure>
@@ -271,7 +279,7 @@
       </article>
       <article>
         <div class="card">
-          <h5>Monday</h5>
+          <p class="dayow">Monday</p>
 
           <div>
             <div class="icon_div">
@@ -291,12 +299,13 @@
                 <figcaption>Patchy Snow Night</figcaption>
               </figure>
             </div>
-            <h4 class="mobile_temp">20</h4>
+            <p class="mobile_temp">20</p>
           </div>
           <p class="weather_condition">Rainy</p>
         </div>
         <div class="card">
-          <h5>Tuesday</h5>
+          s
+          <p class="dayow">Tuesday</p>
           <div>
             <div class="icon_div">
               <figure>
@@ -315,12 +324,12 @@
                 <figcaption>Patchy Snow Night</figcaption>
               </figure>
             </div>
-            <h4 class="mobile_temp">20</h4>
+            <p class="mobile_temp">20</p>
           </div>
           <p class="weather_condition">Rainy</p>
         </div>
         <div class="card">
-          <h5>Wednesday</h5>
+          <p class="dayow">Wednesday</p>
           <div>
             <div class="icon_div">
               <figure>
@@ -339,12 +348,12 @@
                 <figcaption>Patchy Snow Night</figcaption>
               </figure>
             </div>
-            <h4 class="mobile_temp">20</h4>
+            <p class="mobile_temp">20</p>
           </div>
           <p class="weather_condition">Rainy</p>
         </div>
         <div class="card">
-          <h5>Thursday</h5>
+          <p class="dayow">Thursday</p>
           <div>
             <div class="icon_div">
               <figure>
@@ -363,12 +372,12 @@
                 <figcaption>Patchy Snow Night</figcaption>
               </figure>
             </div>
-            <h4 class="mobile_temp">20</h4>
+            <p class="mobile_temp">20</p>
           </div>
           <p class="weather_condition">Rainy</p>
         </div>
       </article>
     </main>
-    <script src="js/main.js"></script>
+    <!-- <script src="js/main.js"></script> -->
   </body>
 </html>
