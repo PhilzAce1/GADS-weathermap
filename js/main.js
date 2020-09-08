@@ -1,16 +1,17 @@
 const searchForm = document.querySelector('#search_form');
 const openModalButton = document.querySelector('#toggle');
 const closeModalButton = document.querySelector('#close');
-
+const myLocationBtn = document.querySelector('#uml');
 //Event Listeners
 searchForm.addEventListener('submit', submit);
 openModalButton.addEventListener('click', handleOpenModal);
 closeModalButton.addEventListener('click', handleCloseModal);
+myLocationBtn.addEventListener('click', getUserCoord);
 window.addEventListener('offline', handleOffline);
 window.addEventListener('online', handleOnline);
+
 window.onload = async () => {
   'use strict';
-  getUserCoord();
   if ('serviceWorker' in navigator) {
     try {
       const registration = await navigator.serviceWorker.register('sw.js');
@@ -21,9 +22,6 @@ window.onload = async () => {
       console.log('Service worker registration failed');
       console.log(e);
     }
-  }
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js');
   }
 };
 const db = cacher();

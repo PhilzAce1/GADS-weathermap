@@ -248,3 +248,12 @@ label {
   position: absolute;
   opacity: 0;
 }
+#uml {
+  background: blue;
+  position: fixed;
+  color: white;
+  padding: 10px 20px;
+  top: 0;
+  right: 0;
+  margin: 20px;
+}
